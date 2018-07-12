@@ -1,24 +1,45 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using IdentityTestProject.Models;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security.DataProtection;
 
 namespace IdentityTestProject.Controllers
 {
-    public class User : IUser
-    {
-        public string Id { get; }
-        public string UserName { get; set; }
-    }
+
+   
+
     public class ResetAccountController : Controller
     {
-//        private UserManager<IUser<string>> _userManager = new UserManager<>();
-        public void SendEmail(string user)
+        UserManager<ApplicationUser> userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>());
+
+        
+        public string SendEmail(string user)
         {
-            
-//            var code = 
+
+            var provider = new DpapiDataProtectionProvider("Sample");
+
+           userManager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(
+                provider.Create("EmailConfirmation"));
+
+            var result = userManager.CreateAsync(new ApplicationUser()
+            {
+                UserName = "abc"
+            });
+            if (result.Result.Succeeded)
+            {
+                var code = userManager.GenerateEmailConfirmationTokenAsync(user);
+                return code.Result;
+            }
+
+            return null;
+
         }
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using IdentityTestProject.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace IdentityTestProject
 {
@@ -18,6 +19,7 @@ namespace IdentityTestProject
             app.CreatePerOwinContext(ApplicationDbContext.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
             app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
+//            app.CreatePerOwinContext<ApplicationSignInManager>(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())));
 
             // Enable the application to use a cookie to store information for the signed in user
             // and to use a cookie to temporarily store information about a user logging in with a third party login provider
@@ -63,6 +65,10 @@ namespace IdentityTestProject
             //    ClientId = "",
             //    ClientSecret = ""
             //});
+
+           
+
+//            UserManagerFactory = () => new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
         }
     }
 }
